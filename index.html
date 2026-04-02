@@ -22,8 +22,6 @@ body::before{
       no-repeat center/cover;
     z-index:-1;
 }
-
-/* Top bar */
 .topLeft{
     position:absolute;
     top:15px; left:20px;
@@ -40,13 +38,7 @@ body::before{
     background:rgba(0,0,0,0.7);
     padding:8px 15px;
 }
-
-/* Intro */
-.intro{
-    margin-top:120px;
-    font-size:30px;
-    min-height:90px;
-}
+.intro{ margin-top:120px; font-size:30px; min-height:90px; }
 
 button{
     margin-top:30px;
@@ -59,13 +51,11 @@ button{
     cursor:pointer;
 }
 
-/* Recognition */
 .gavelText{font-size:24px;margin-top:40px;opacity:0;transition:1s}
 .lightLine{width:0;height:2px;background:#1a73e8;margin:30px auto;transition:1s}
 .card{display:none;margin-top:40px;opacity:0;transition:1s}
 .highlight{color:#1a73e8;font-weight:bold}
 
-/* Ticker */
 .ticker{
     position:fixed;bottom:0;width:100%;
     background:rgba(0,0,0,0.85);
@@ -81,22 +71,18 @@ button{
     to{transform:translateX(-100%)}
 }
 
-/* ID Screen */
 #idScreen{
 position:fixed;inset:0;background:black;
 display:flex;flex-direction:column;
 justify-content:center;align-items:center;z-index:9999
 }
-input{
-padding:12px;font-size:18px;margin-top:15px;text-align:center
-}
+input{ padding:12px;font-size:18px;margin-top:15px;text-align:center }
 #error{color:red;margin-top:10px;display:none}
 </style>
 </head>
 
 <body>
 
-<!-- ID SCREEN -->
 <div id="idScreen">
 <h2>United Nations Security Council</h2>
 <p>Enter your Delegate ID</p>
@@ -127,7 +113,7 @@ ORDER! THE CHAIR CALLS THE HOUSE TO ORDER!!
 
 <div class="ticker">
 <div class="tickerText">
-<strong style="color:#1a73e8;">UNSC LIVE</strong> • EMACITY MUN • DIPLOMACY IN PROGRESS • MAINTAIN DECORUM •
+UNSC LIVE • EMACITY MUN • DIPLOMACY IN PROGRESS • MAINTAIN DECORUM •
 </div>
 </div>
 
@@ -135,13 +121,11 @@ ORDER! THE CHAIR CALLS THE HOUSE TO ORDER!!
 <audio id="voice" src="https://www.myinstants.com/media/sounds/order-order.mp3"></audio>
 
 <script>
-/* CLOCK IST */
 setInterval(()=>{
  document.getElementById('clock').innerText=
  new Date().toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata'});
 },1000);
 
-/* DATABASE */
 const delegates={
  "UNSC01":{name:"Arnav Vikrant Mane",country:"Greece"},
  "UNSC02":{name:"Avneesh Ankush Gaurkar",country:"Liberia"}
@@ -159,7 +143,6 @@ function verifyID(){
  }
 }
 
-/* Typing effect (no HTML glitch) */
 function typeText(el,text,speed){
  el.innerHTML="";
  let i=0;
