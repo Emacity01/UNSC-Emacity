@@ -173,7 +173,8 @@ function typeHTML(el,html,speed){
 
 function startUNSC(){
  const intro=document.getElementById("intro");
- const msg=`WELCOME TO THE UNITED NATIONS SECURITY COUNCIL!`;
+ const msg=`WELCOME TO THE UNITED NATIONS SECURITY COUNCIL<br>
+ <span style="color:#1a73e8;">EMACITY MODEL UNITED NATIONS</span>`;
  typeHTML(intro,msg,35);
 
  document.getElementById("gavel").play().catch(()=>{});
