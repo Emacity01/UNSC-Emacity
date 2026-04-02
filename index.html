@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UNSC - Emacity</title>
+
+<style>
+body{
+    margin:0;
+    font-family:"Georgia",serif;
+    color:white;
+    text-align:center;
+    overflow:hidden;
+}
+
+/* BACKGROUND */
+body::before{
+    content:"";
+    position:fixed;
+    top:0; left:0;
+    width:100vw; height:100vh;
+    background:
+      linear-gradient(to bottom,rgba(0,0,0,0.75),rgba(0,0,0,0.95)),
+      url("https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1")
+      no-repeat center center/cover;
+    z-index:-1;
+}
+
+/* TOP LEFT */
+.topLeft{
+    position:absolute;
+    top:15px; left:20px;
+    background:rgba(0,0,0,0.7);
+    padding:8px 15px;
+    font-size:13px;
+    letter-spacing:2px;
+    animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+    from{box-shadow:0 0 5px #1a73e8;}
+    to{box-shadow:0 0 15px #1a73e8;}
+}
+
+/* REAL TIME CLOCK */
+.clock{
+    position:absolute;
+    top:15px; right:20px;
+    font-size:13px;
+    background:rgba(0,0,0,0.7);
+    padding:8px 15px;
+}
+
+/* INTRO */
+.intro{
+    margin-top:120px;
+    font-size:30px;
+    min-height:90px;
+}
+
+/* BUTTON */
+button{
+    margin-top:30px;
+    padding:15px 30px;
+    font-size:18px;
+    background:#1a73e8;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* GAVEL TEXT */
+.gavelText{
+    font-size:24px;
+    margin-top:40px;
+    opacity:0;
+    transition:1s ease;
+}
+
+/* LINE */
+.lightLine{
+    width:0%;
+    height:2px;
+    background:#1a73e8;
+    margin:30px auto;
+    transition:1s ease;
+}
+
+/* CARD */
+.card{
+    display:none;
+    margin-top:40px;
+    opacity:0;
+    transition:1s ease;
+}
+
+.highlight{
+    color:#1a73e8;
+    font-weight:bold;
+}
+
+/* NEWS TICKER */
+.ticker{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:rgba(0,0,0,0.85);
+    padding:10px 0;
+    overflow:hidden;
+    white-space:nowrap;
+    font-size:14px;
+    border-top:1px solid #1a73e8;
+}
+
+.tickerText{
+    display:inline-block;
+    padding-left:100%;
+    animation:tickerMove 25s linear infinite;
+}
+
+@keyframes tickerMove{
+    from{transform:translateX(0);}
+    to{transform:translateX(-100%);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="topLeft">
+UNITED NATIONS SECURITY COUNCIL • EMACITY
+</div>
+
+<div class="clock" id="clock"></div>
+
+<div class="intro" id="intro"></div>
+
+<button onclick="startUNSC()">ENTER SESSION</button>
+
+<div class="gavelText" id="gavelText">
+ ORDER! THE CHAIR CALLS THE HOUSE TO ORDER!!
+</div>
+
+<div class="lightLine" id="line"></div>
+
+<div class="card" id="card">
+<h1>DELEGATE RECOGNITION</h1>
+<p>Name: <span class="highlight">[NAME]</span></p>
+<p>Country: <span class="highlight">[COUNTRY]</span></p>
+<p>Committee: <span class="highlight">UNSC</span></p>
+<br>
+<p>You are now recognized to speak.</p>
+<p>The Council awaits your intervention.</p>
+</div>
+
+<!-- NEWS -->
+<div class="ticker">
+<div class="tickerText">
+UNSC LIVE SESSION • EMACITY MUN • DELEGATES ARE REQUESTED TO MAINTAIN DECORUM • FOREIGN POLICY DEBATE IN PROGRESS • DIPLOMACY OVER AGGRESSION • ORDER IN THE HOUSE •
+</div>
+</div>
+
+<!-- AUDIO -->
+<audio id="gavel" src="https://www.soundjay.com/misc/sounds/gavel-01.mp3"></audio>
+<audio id="voice" src="https://www.myinstants.com/media/sounds/order-order.mp3"></audio>
+
+<script>
+/* REAL TIME CLOCK (IST) */
+function updateClock(){
+    const now = new Date();
+    const options = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute:'2-digit', second:'2-digit'};
+    document.getElementById('clock').innerText =
+        new Intl.DateTimeFormat('en-IN', options).format(now);
+}
+setInterval(updateClock,1000);
+updateClock();
+
+/* TYPING EFFECT */
+function typeText(element, html, speed){
+    let i=0;
+    element.innerHTML="";
+    function typing(){
+        if(i<html.length){
+            element.innerHTML += html.charAt(i);
+            i++;
+            setTimeout(typing,speed);
+        }
+    }
+    typing();
+}
+
+function startUNSC(){
+    const intro=document.getElementById("intro");
+    const message="WELCOME TO THE UNITED NATIONS SECURITY COUNCIL";
+    typeText(intro,message,35);
+
+    document.getElementById("gavel").play().catch(()=>{});
+
+    setTimeout(()=>{
+        document.getElementById("gavelText").style.opacity=1;
+    },2200);
+
+    setTimeout(()=>{
+        document.getElementById("line").style.width="60%";
+    },2800);
+
+    setTimeout(()=>{
+        document.getElementById("voice").play().catch(()=>{});
+    },3200);
+
+    setTimeout(()=>{
+        let card=document.getElementById("card");
+        card.style.display="block";
+        setTimeout(()=>card.style.opacity=1,100);
+    },4000);
+}
+</script>
+
+</body>
+</html>
