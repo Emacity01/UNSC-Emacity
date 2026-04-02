@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>UNSC - Emacity</title>
+<title>UNSC • Emacity MUN</title>
 
 <style>
 body{
@@ -12,8 +12,6 @@ body{
     text-align:center;
     overflow:hidden;
 }
-
-/* BACKGROUND */
 body::before{
     content:"";
     position:fixed;
@@ -26,7 +24,7 @@ body::before{
     z-index:-1;
 }
 
-/* TOP LEFT */
+/* Top bar */
 .topLeft{
     position:absolute;
     top:15px; left:20px;
@@ -34,15 +32,8 @@ body::before{
     padding:8px 15px;
     font-size:13px;
     letter-spacing:2px;
-    animation:glow 2s infinite alternate;
+    box-shadow:0 0 12px #1a73e8;
 }
-
-@keyframes glow{
-    from{box-shadow:0 0 5px #1a73e8;}
-    to{box-shadow:0 0 15px #1a73e8;}
-}
-
-/* CLOCK */
 .clock{
     position:absolute;
     top:15px; right:20px;
@@ -51,17 +42,16 @@ body::before{
     padding:8px 15px;
 }
 
-/* INTRO */
+/* Intro */
 .intro{
     margin-top:120px;
     font-size:30px;
     min-height:90px;
 }
 
-/* BUTTON */
 button{
     margin-top:30px;
-    padding:15px 30px;
+    padding:14px 28px;
     font-size:18px;
     background:#1a73e8;
     color:white;
@@ -70,93 +60,56 @@ button{
     cursor:pointer;
 }
 
-/* GAVEL TEXT */
-.gavelText{
-    font-size:24px;
-    margin-top:40px;
-    opacity:0;
-    transition:1s ease;
-}
+/* Recognition */
+.gavelText{font-size:24px;margin-top:40px;opacity:0;transition:1s}
+.lightLine{width:0;height:2px;background:#1a73e8;margin:30px auto;transition:1s}
+.card{display:none;margin-top:40px;opacity:0;transition:1s}
+.highlight{color:#1a73e8;font-weight:bold}
 
-/* LINE */
-.lightLine{
-    width:0%;
-    height:2px;
-    background:#1a73e8;
-    margin:30px auto;
-    transition:1s ease;
-}
-
-/* CARD */
-.card{
-    display:none;
-    margin-top:40px;
-    opacity:0;
-    transition:1s ease;
-}
-
-.highlight{
-    color:#1a73e8;
-    font-weight:bold;
-}
-
-/* NEWS TICKER */
+/* Ticker */
 .ticker{
-    position:fixed;
-    bottom:0;
-    width:100%;
+    position:fixed;bottom:0;width:100%;
     background:rgba(0,0,0,0.85);
-    padding:10px 0;
-    overflow:hidden;
-    white-space:nowrap;
-    font-size:14px;
-    border-top:1px solid #1a73e8;
+    padding:10px 0;overflow:hidden;white-space:nowrap;
+    font-size:14px;border-top:1px solid #1a73e8;
 }
 .tickerText{
-    display:inline-block;
-    padding-left:100%;
+    display:inline-block;padding-left:100%;
     animation:tickerMove 25s linear infinite;
 }
 @keyframes tickerMove{
-    from{transform:translateX(0);}
-    to{transform:translateX(-100%);}
+    from{transform:translateX(0)}
+    to{transform:translateX(-100%)}
 }
 
-/* LOCK SCREEN */
-#lockScreen{
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:black;
-color:white;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-z-index:9999;
+/* ID Screen */
+#idScreen{
+position:fixed;inset:0;background:black;
+display:flex;flex-direction:column;
+justify-content:center;align-items:center;z-index:9999
 }
+input{
+padding:12px;font-size:18px;margin-top:15px;text-align:center
+}
+#error{color:red;margin-top:10px;display:none}
 </style>
 </head>
 
 <body>
 
-<!-- PASSWORD SCREEN -->
-<div id="lockScreen">
-<h2>UNSC Secure Access</h2>
-<input type="password" id="passInput" placeholder="Enter Access Code"
-style="padding:10px;font-size:16px;margin-top:15px;">
-<button onclick="checkPass()">Enter</button>
-<p id="wrong" style="color:red;display:none;">Invalid Code</p>
+<!-- ID SCREEN -->
+<div id="idScreen">
+<h2>United Nations Security Council</h2>
+<p>Enter your Delegate ID</p>
+<input id="idInput" placeholder="UNSC01">
+<button onclick="verifyID()">Proceed</button>
+<p id="error">Invalid Delegate ID</p>
 </div>
 
-<div class="topLeft">
-UNITED NATIONS SECURITY COUNCIL • EMACITY
-</div>
-
+<div class="topLeft">UNITED NATIONS SECURITY COUNCIL • EMACITY</div>
 <div class="clock" id="clock"></div>
 
 <div class="intro" id="intro"></div>
-
 <button onclick="startUNSC()">ENTER SESSION</button>
 
 <div class="gavelText" id="gavelText">
@@ -170,14 +123,12 @@ ORDER! THE CHAIR CALLS THE HOUSE TO ORDER!!
 <p>Name: <span class="highlight" id="delName"></span></p>
 <p>Country: <span class="highlight" id="delCountry"></span></p>
 <p>Committee: <span class="highlight">UNSC</span></p>
-<br>
 <p>You are now recognized to speak.</p>
-<p>The Council awaits your intervention.</p>
 </div>
 
 <div class="ticker">
 <div class="tickerText">
-<strong style="color:#1a73e8;">UNSC LIVE</strong> • EMACITY MUN • DELEGATES ARE REQUESTED TO MAINTAIN DECORUM • FOREIGN POLICY DEBATE IN PROGRESS • DIPLOMACY OVER AGGRESSION •
+<strong style="color:#1a73e8;">UNSC LIVE</strong> • EMACITY MUN • DIPLOMACY IN PROGRESS • MAINTAIN DECORUM •
 </div>
 </div>
 
@@ -186,78 +137,57 @@ ORDER! THE CHAIR CALLS THE HOUSE TO ORDER!!
 
 <script>
 /* CLOCK IST */
-function updateClock(){
-    const now=new Date();
-    const options={timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',second:'2-digit'};
-    document.getElementById('clock').innerText=
-    new Intl.DateTimeFormat('en-IN',options).format(now);
-}
-setInterval(updateClock,1000);
-updateClock();
+setInterval(()=>{
+ document.getElementById('clock').innerText=
+ new Date().toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata'});
+},1000);
 
-/* DELEGATE DATABASE */
+/* DATABASE */
 const delegates={
  "UNSC01":{name:"Arnav Vikrant Mane",country:"Greece"},
  "UNSC02":{name:"Avneesh Ankush Gaurkar",country:"Liberia"}
 };
 
-function checkPass(){
-    const code=document.getElementById("passInput").value.trim().toUpperCase();
-    const data=delegates[code];
-    if(data){
-        document.getElementById("lockScreen").style.display="none";
-        document.getElementById("delName").innerText=data.name;
-        document.getElementById("delCountry").innerText=data.country;
-    }else{
-        document.getElementById("wrong").style.display="block";
-    }
+function verifyID(){
+ const id=document.getElementById("idInput").value.trim().toUpperCase();
+ if(delegates[id]){
+   window.currentDelegate=delegates[id];
+   document.getElementById("idScreen").style.display="none";
+ }else{
+   document.getElementById("error").style.display="block";
+ }
 }
 
-/* TYPING EFFECT */
+/* Typing effect */
 function typeHTML(el,html,speed){
-    el.innerHTML="";
-    let temp=document.createElement("div");
-    temp.innerHTML=html;
-    let nodes=Array.from(temp.childNodes);
-    let i=0;
-    function typeNode(){
-        if(i>=nodes.length) return;
-        let node=nodes[i];
-        if(node.nodeType===3){
-            let text=node.textContent,j=0;
-            let span=document.createElement("span");
-            el.appendChild(span);
-            function typeChar(){
-                if(j<text.length){
-                    span.textContent+=text[j++];
-                    setTimeout(typeChar,speed);
-                }else{i++;typeNode();}
-            }
-            typeChar();
-        }else{
-            el.appendChild(node.cloneNode(true));
-            i++;typeNode();
-        }
-    }
-    typeNode();
+ el.innerHTML="";
+ let i=0;
+ function typing(){
+   if(i<html.length){
+     el.innerHTML+=html.charAt(i++);
+     setTimeout(typing,speed);
+   }
+ }
+ typing();
 }
 
 function startUNSC(){
-    const intro=document.getElementById("intro");
-    const msg=`WELCOME TO THE UNITED NATIONS SECURITY COUNCIL<br>
-    <span style="color:#1a73e8;">EMACITY MODEL UNITED NATIONS</span>`;
-    typeHTML(intro,msg,35);
+ const intro=document.getElementById("intro");
+ const msg=`WELCOME TO THE UNITED NATIONS SECURITY COUNCIL<br>
+ <span style="color:#1a73e8;">EMACITY MODEL UNITED NATIONS</span>`;
+ typeHTML(intro,msg,35);
 
-    document.getElementById("gavel").play().catch(()=>{});
-
-    setTimeout(()=>{document.getElementById("gavelText").style.opacity=1;},2200);
-    setTimeout(()=>{document.getElementById("line").style.width="60%";},2800);
-    setTimeout(()=>{document.getElementById("voice").play().catch(()=>{});},3200);
-    setTimeout(()=>{
-        let card=document.getElementById("card");
-        card.style.display="block";
-        setTimeout(()=>card.style.opacity=1,100);
-    },4000);
+ document.getElementById("gavel").play().catch(()=>{});
+ setTimeout(()=>{document.getElementById("gavelText").style.opacity=1;},2200);
+ setTimeout(()=>{document.getElementById("line").style.width="60%";},2800);
+ setTimeout(()=>{document.getElementById("voice").play().catch(()=>{});},3200);
+ setTimeout(()=>{
+   let card=document.getElementById("card");
+   document.getElementById("delName").innerText=currentDelegate.name;
+   document.getElementById("delCountry").innerText=currentDelegate.country;
+   card.style.display="block";
+   setTimeout(()=>card.style.opacity=1,100);
+ },4000);
 }
 </script>
 
