@@ -15,12 +15,11 @@ body{
 body::before{
     content:"";
     position:fixed;
-    top:0; left:0;
-    width:100vw; height:100vh;
+    inset:0;
     background:
       linear-gradient(to bottom,rgba(0,0,0,0.75),rgba(0,0,0,0.95)),
       url("https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1")
-      no-repeat center center/cover;
+      no-repeat center/cover;
     z-index:-1;
 }
 
@@ -148,23 +147,25 @@ const delegates={
  "UNSC02":{name:"Avneesh Ankush Gaurkar",country:"Liberia"}
 };
 
+let currentDelegate=null;
+
 function verifyID(){
  const id=document.getElementById("idInput").value.trim().toUpperCase();
  if(delegates[id]){
-   window.currentDelegate=delegates[id];
+   currentDelegate=delegates[id];
    document.getElementById("idScreen").style.display="none";
  }else{
    document.getElementById("error").style.display="block";
  }
 }
 
-/* Typing effect */
-function typeHTML(el,html,speed){
+/* Typing effect (no HTML glitch) */
+function typeText(el,text,speed){
  el.innerHTML="";
  let i=0;
  function typing(){
-   if(i<html.length){
-     el.innerHTML+=html.charAt(i++);
+   if(i<text.length){
+     el.innerHTML+=text.charAt(i++);
      setTimeout(typing,speed);
    }
  }
@@ -173,9 +174,7 @@ function typeHTML(el,html,speed){
 
 function startUNSC(){
  const intro=document.getElementById("intro");
- const msg=`WELCOME TO THE UNITED NATIONS SECURITY COUNCIL<br>
- <span style="color:#1a73e8;">EMACITY MODEL UNITED NATIONS</span>`;
- typeHTML(intro,msg,35);
+ typeText(intro,"WELCOME TO EMACITY MODEL UNITED NATIONS",35);
 
  document.getElementById("gavel").play().catch(()=>{});
  setTimeout(()=>{document.getElementById("gavelText").style.opacity=1;},2200);
