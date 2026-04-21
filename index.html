@@ -106,7 +106,7 @@ ORDER! THE CHAIR CALLS THE HOUSE TO ORDER!!
 <div class="card" id="card">
 <h1>DELEGATE RECOGNITION</h1>
 <p>Name: <span class="highlight" id="delName"></span></p>
-<p>Country: <span class="highlight" id="delCountry"></span></p>
+<p id="roleLine">Country: <span class="highlight" id="delCountry"></span></p>
 <p>Committee: <span class="highlight">UNSC</span></p>
 <p>You are now recognized to speak.</p>
 </div>
@@ -140,6 +140,7 @@ const delegates = {
 "UNSC12": { name: "Aditi Joshi", country: "Republic of India" },
 "UNSC13": { name: "Sushant Kumar Sharma", country: "Somalia" },
 "UNSC14": { name: "Affan Nazimuddin Shaikh", country: "African Union" },
+
 "YASH01": { name: "Yashhh Borkar", position: "President" },
 "ARJ02": { name: "Arjun Potnis", position: "Vice President" },
 "PRA03": { name: "Pratyush Mahapatra", position: "Rapporteur" }
@@ -177,10 +178,22 @@ function startUNSC(){
  setTimeout(()=>{document.getElementById("gavelText").style.opacity=1;},2200);
  setTimeout(()=>{document.getElementById("line").style.width="60%";},2800);
  setTimeout(()=>{document.getElementById("voice").play().catch(()=>{});},3200);
+
  setTimeout(()=>{
    let card=document.getElementById("card");
    document.getElementById("delName").innerText=currentDelegate.name;
-   document.getElementById("delCountry").innerText=currentDelegate.country;
+
+   const roleLine=document.getElementById("roleLine");
+   const roleSpan=document.getElementById("delCountry");
+
+   if(currentDelegate.position){
+     roleLine.innerHTML='Position: <span class="highlight" id="delCountry"></span>';
+     document.getElementById("delCountry").innerText=currentDelegate.position;
+   }else{
+     roleLine.innerHTML='Country: <span class="highlight" id="delCountry"></span>';
+     document.getElementById("delCountry").innerText=currentDelegate.country;
+   }
+
    card.style.display="block";
    setTimeout(()=>card.style.opacity=1,100);
  },4000);
