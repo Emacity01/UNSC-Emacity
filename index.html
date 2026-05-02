@@ -18,7 +18,7 @@ body::before{
     inset:0;
     background:
       linear-gradient(to bottom,rgba(0,0,0,0.75),rgba(0,0,0,0.95)),
-      url("https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1")
+      url("https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1950&q=80")
       no-repeat center/cover;
     z-index:-1;
 }
@@ -117,40 +117,23 @@ UNSC LIVE • EMACITY MUN • DIPLOMACY IN PROGRESS • MAINTAIN DECORUM •
 </div>
 </div>
 
+<!-- Working audio -->
 <audio id="gavel" src="https://www.soundjay.com/misc/sounds/gavel-01.mp3"></audio>
-<audio id="voice" src="https://www.myinstants.com/media/sounds/order-order.mp3"></audio>
+<audio id="voice" src="https://www.soundjay.com/human/sounds/order-please-01.mp3"></audio>
 
 <script>
+// Live clock
 setInterval(()=>{
  document.getElementById('clock').innerText=
  new Date().toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata'});
 },1000);
 
+// Delegates + EB
 const delegates = {
 "UNSC01": { name: "Arnav Vikrant Mane", country: "Greece" },
 "UNSC02": { name: "Avneesh Ankush Gaurkar", country: "Liberia" },
-"UNSC03": { name: "Kanishk Biswas", country: "United Kingdom of Great Britain and Northern Ireland" },
+"UNSC03": { name: "Kanishk Biswas", country: "United Kingdom" },
 "UNSC04": { name: "Ansh Meshram", country: "Colombia" },
-"UNSC05": { name: "Nishad Dhatrak", country: "Israel" },
-"UNSC06": { name: "Pranav Kudva Nandavara", country: "Republic of France" },
-"UNSC07": { name: "Aaral Jaiswal", country: "United States of America" },
-"UNSC08": { name: "Shikhar Joshi", country: "Denmark" },
-"UNSC09": { name: "Samen Aneja", country: "People’s Republic of China" },
-"UNSC10": { name: "Ishaan Nesarikar", country: "Yemen" },
-"UNSC11": { name: "Mayan A. Sreedharan", country: "Russian Federation" },
-"UNSC12": { name: "Aditi Joshi", country: "Republic of India" },
-"UNSC13": { name: "Sushant Kumar Sharma", country: "Somalia" },
-"UNSC14": { name: "Affan Nazimuddin Shaikh", country: "African Union" },
-"UNSC15": { name: "Ayan Patidar", country: "EGYPT" },
-"UNSC16": { name: "Akshay Kumar Mishra", country: "Germany" },
-"UNSC17": { name: "Sujan Baratam", country: "Republic of Panama" },
-"UNSC18": { name: "Parth Ambre", country: "Islamic Republic of Pakistan" },
-"UNSC19": { name: "Parth Dasare", country: "Bahrain" },
-"UNSC20": { name: "Arnav Papalkar", country: "Japan" },
-"UNSC21": { name: "Anika Singh", country: "Iran" },
-"UNSC22": { name: "Suhab Singh", country: "Democratic Republic of Congo" },
-"UNSC23": { name: "Naina Sarawagi", country: "Italian Republic" },
-"UNSC24": { name: "Dhruv Sharma", country: "Democratic People’s Republic of Korea" },
 
 "YASH01": { name: "Yash Borkar", position: "President" },
 "ARJ02": { name: "Arjun Potnis", position: "Vice President" },
@@ -182,8 +165,10 @@ function typeText(el,text,speed){
 }
 
 function startUNSC(){
- const intro=document.getElementById("intro");
- typeText(intro,"WELCOME TO EMACITY MODEL UNITED NATIONS",35);
+ if(!currentDelegate) return alert("Enter Delegate ID first");
+
+ typeText(document.getElementById("intro"),
+ "WELCOME TO EMACITY MODEL UNITED NATIONS",35);
 
  document.getElementById("gavel").play().catch(()=>{});
  setTimeout(()=>{document.getElementById("gavelText").style.opacity=1;},2200);
@@ -191,18 +176,15 @@ function startUNSC(){
  setTimeout(()=>{document.getElementById("voice").play().catch(()=>{});},3200);
 
  setTimeout(()=>{
-   let card=document.getElementById("card");
+   const card=document.getElementById("card");
    document.getElementById("delName").innerText=currentDelegate.name;
 
    const roleLine=document.getElementById("roleLine");
-   const roleSpan=document.getElementById("delCountry");
 
    if(currentDelegate.position){
-     roleLine.innerHTML='Position: <span class="highlight" id="delCountry"></span>';
-     document.getElementById("delCountry").innerText=currentDelegate.position;
+     roleLine.innerHTML='Position: <span class="highlight">'+currentDelegate.position+'</span>';
    }else{
-     roleLine.innerHTML='Country: <span class="highlight" id="delCountry"></span>';
-     document.getElementById("delCountry").innerText=currentDelegate.country;
+     roleLine.innerHTML='Country: <span class="highlight">'+currentDelegate.country+'</span>';
    }
 
    card.style.display="block";
