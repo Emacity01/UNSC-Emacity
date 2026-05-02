@@ -77,7 +77,7 @@ display:flex;flex-direction:column;
 justify-content:center;align-items:center;z-index:9999
 }
 input{ padding:12px;font-size:18px;margin-top:15px;text-align:center }
-#error{color:red;margin-top:10px;display:none}
+#error{margin-top:10px;display:none;font-weight:bold}
 </style>
 </head>
 
@@ -88,14 +88,13 @@ input{ padding:12px;font-size:18px;margin-top:15px;text-align:center }
 <p>Enter your Delegate ID</p>
 <input id="idInput" placeholder="UNSC01">
 <button onclick="verifyID()">Proceed</button>
-<p id="error">Invalid Delegate ID</p>
+<p id="error"></p>
 </div>
 
 <div class="topLeft">UNITED NATIONS SECURITY COUNCIL • EMACITY</div>
 <div class="clock" id="clock"></div>
 
 <div class="intro" id="intro"></div>
-<button onclick="startUNSC()">ENTER SESSION</button>
 
 <div class="gavelText" id="gavelText">
 ORDER! THE CHAIR CALLS THE HOUSE TO ORDER!!
@@ -106,7 +105,7 @@ ORDER! THE CHAIR CALLS THE HOUSE TO ORDER!!
 <div class="card" id="card">
 <h1>DELEGATE RECOGNITION</h1>
 <p>Name: <span class="highlight" id="delName"></span></p>
-<p id="roleLine">Country: <span class="highlight" id="delCountry"></span></p>
+<p id="roleLine"></p>
 <p>Committee: <span class="highlight">UNSC</span></p>
 <p>You are now recognized to speak.</p>
 </div>
@@ -117,38 +116,79 @@ UNSC LIVE • EMACITY MUN • DIPLOMACY IN PROGRESS • MAINTAIN DECORUM •
 </div>
 </div>
 
-<!-- Working audio -->
 <audio id="gavel" src="https://www.soundjay.com/misc/sounds/gavel-01.mp3"></audio>
 <audio id="voice" src="https://www.soundjay.com/human/sounds/order-please-01.mp3"></audio>
 
 <script>
-// Live clock
+
+// CLOCK
 setInterval(()=>{
  document.getElementById('clock').innerText=
  new Date().toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata'});
 },1000);
 
-// Delegates + EB
+// ALL DELEGATES + EB
 const delegates = {
+
 "UNSC01": { name: "Arnav Vikrant Mane", country: "Greece" },
 "UNSC02": { name: "Avneesh Ankush Gaurkar", country: "Liberia" },
-"UNSC03": { name: "Kanishk Biswas", country: "United Kingdom" },
+"UNSC03": { name: "Kanishk Biswas", country: "United Kingdom of Great Britain and Northern Ireland" },
 "UNSC04": { name: "Ansh Meshram", country: "Colombia" },
+"UNSC05": { name: "Nishad Dhatrak", country: "Israel" },
+"UNSC06": { name: "Pranav Kudva Nandavara", country: "France" },
+"UNSC07": { name: "Aaral Jaiswal", country: "USA" },
+"UNSC08": { name: "Shikhar Joshi", country: "Denmark" },
+"UNSC09": { name: "Samen Aneja", country: "China" },
+"UNSC10": { name: "Ishaan Nesarikar", country: "Yemen" },
+"UNSC11": { name: "Mayan A. Sreedharan", country: "Russian Federation" },
+"UNSC12": { name: "Aditi Joshi", country: "India" },
+"UNSC13": { name: "Sushant Kumar Sharma", country: "Somalia" },
+"UNSC14": { name: "Affan Nazimuddin Shaikh", country: "African Union" },
+"UNSC15": { name: "Ayan Patidar", country: "Egypt" },
+"UNSC16": { name: "Akshay Kumar Mishra", country: "Germany" },
+"UNSC17": { name: "Sujan Baratam", country: "Panama" },
+"UNSC18": { name: "Parth Ambre", country: "Pakistan" },
+"UNSC19": { name: "Parth Dasare", country: "Bahrain" },
+"UNSC20": { name: "Arnav Papalkar", country: "Japan" },
+"UNSC21": { name: "Anika Singh", country: "Iran" },
+"UNSC22": { name: "Suhab Singh", country: "DR Congo" },
+"UNSC23": { name: "Naina Sarawagi", country: "Italy" },
+"UNSC24": { name: "Dhruv Sharma", country: "North Korea" },
 
+// EXECUTIVE BOARD
 "YASH01": { name: "Yash Borkar", position: "President" },
 "ARJ02": { name: "Arjun Potnis", position: "Vice President" },
 "PRA03": { name: "Pratyush Mahapatra", position: "Rapporteur" }
+
 };
 
 let currentDelegate=null;
 
+// ENTER KEY SUPPORT
+document.getElementById("idInput").addEventListener("keydown",e=>{
+ if(e.key==="Enter") verifyID();
+});
+
 function verifyID(){
  const id=document.getElementById("idInput").value.trim().toUpperCase();
+ const error=document.getElementById("error");
+
  if(delegates[id]){
    currentDelegate=delegates[id];
-   document.getElementById("idScreen").style.display="none";
+
+   error.style.display="block";
+   error.style.color="#00ff88";
+   error.innerText="Access Granted. Welcome Delegate.";
+
+   setTimeout(()=>{
+     document.getElementById("idScreen").style.display="none";
+     startUNSC();
+   },1200);
+
  }else{
-   document.getElementById("error").style.display="block";
+   error.style.display="block";
+   error.style.color="red";
+   error.innerText="Invalid Delegate ID";
  }
 }
 
@@ -165,12 +205,11 @@ function typeText(el,text,speed){
 }
 
 function startUNSC(){
- if(!currentDelegate) return alert("Enter Delegate ID first");
-
  typeText(document.getElementById("intro"),
  "WELCOME TO EMACITY MODEL UNITED NATIONS",35);
 
  document.getElementById("gavel").play().catch(()=>{});
+
  setTimeout(()=>{document.getElementById("gavelText").style.opacity=1;},2200);
  setTimeout(()=>{document.getElementById("line").style.width="60%";},2800);
  setTimeout(()=>{document.getElementById("voice").play().catch(()=>{});},3200);
@@ -191,6 +230,7 @@ function startUNSC(){
    setTimeout(()=>card.style.opacity=1,100);
  },4000);
 }
+
 </script>
 
 </body>
