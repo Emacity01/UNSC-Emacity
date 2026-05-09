@@ -41,8 +41,8 @@ body::before{
 .intro{ margin-top:120px; font-size:30px; min-height:90px; }
 
 button{
-    margin-top:30px;
-    padding:14px 28px;
+    margin-top:20px;
+    padding:12px 24px;
     font-size:18px;
     background:#1a73e8;
     color:white;
@@ -51,33 +51,21 @@ button{
     cursor:pointer;
 }
 
-.gavelText{font-size:24px;margin-top:40px;opacity:0;transition:1s}
-.lightLine{width:0;height:2px;background:#1a73e8;margin:30px auto;transition:1s}
-.card{display:none;margin-top:40px;opacity:0;transition:1s}
-.highlight{color:#1a73e8;font-weight:bold}
-
-.ticker{
-    position:fixed;bottom:0;width:100%;
-    background:rgba(0,0,0,0.85);
-    padding:10px 0;overflow:hidden;white-space:nowrap;
-    font-size:14px;border-top:1px solid #1a73e8;
-}
-.tickerText{
-    display:inline-block;padding-left:100%;
-    animation:tickerMove 25s linear infinite;
-}
-@keyframes tickerMove{
-    from{transform:translateX(0)}
-    to{transform:translateX(-100%)}
-}
-
 #idScreen{
 position:fixed;inset:0;background:black;
 display:flex;flex-direction:column;
 justify-content:center;align-items:center;z-index:9999
 }
-input{ padding:12px;font-size:18px;margin-top:15px;text-align:center }
+input{
+ padding:12px;
+ font-size:18px;
+ margin-top:15px;
+ text-align:center;
+ text-transform:uppercase;
+}
 #error{margin-top:10px;display:none;font-weight:bold}
+.highlight{color:#1a73e8;font-weight:bold}
+.card{display:none;margin-top:40px;opacity:0;transition:1s}
 </style>
 </head>
 
@@ -86,7 +74,7 @@ input{ padding:12px;font-size:18px;margin-top:15px;text-align:center }
 <div id="idScreen">
 <h2>United Nations Security Council</h2>
 <p>Enter your Delegate ID</p>
-<input id="idInput" placeholder="UNSC01">
+<input id="idInput" placeholder="UNSC01" autocomplete="off">
 <button onclick="verifyID()">Proceed</button>
 <p id="error"></p>
 </div>
@@ -96,43 +84,27 @@ input{ padding:12px;font-size:18px;margin-top:15px;text-align:center }
 
 <div class="intro" id="intro"></div>
 
-<div class="gavelText" id="gavelText">
-ORDER! THE CHAIR CALLS THE HOUSE TO ORDER!!
-</div>
-
-<div class="lightLine" id="line"></div>
-
 <div class="card" id="card">
 <h1>DELEGATE RECOGNITION</h1>
 <p>Name: <span class="highlight" id="delName"></span></p>
 <p id="roleLine"></p>
 <p>Committee: <span class="highlight">UNSC</span></p>
-<p>You are now recognized to speak.</p>
 </div>
-
-<div class="ticker">
-<div class="tickerText">
-UNSC LIVE • EMACITY MUN • DIPLOMACY IN PROGRESS • MAINTAIN DECORUM •
-</div>
-</div>
-
-<audio id="gavel" src="https://www.soundjay.com/misc/sounds/gavel-01.mp3"></audio>
-<audio id="voice" src="https://www.soundjay.com/human/sounds/order-please-01.mp3"></audio>
 
 <script>
-
-// CLOCK
-setInterval(()=>{
- document.getElementById('clock').innerText=
+// CLOCK STARTS IMMEDIATELY
+function updateClock(){
+ document.getElementById('clock').innerText =
  new Date().toLocaleTimeString('en-IN',{timeZone:'Asia/Kolkata'});
-},1000);
+}
+setInterval(updateClock,1000);
+updateClock();
 
-// ALL DELEGATES + EB
+// DELEGATE DATA
 const delegates = {
-
 "UNSC01": { name: "Arnav Vikrant Mane", country: "Greece" },
 "UNSC02": { name: "Avneesh Ankush Gaurkar", country: "Liberia" },
-"UNSC03": { name: "Kanishk Biswas", country: "United Kingdom of Great Britain and Northern Ireland" },
+"UNSC03": { name: "Kanishk Biswas", country: "United Kingdom" },
 "UNSC04": { name: "Ansh Meshram", country: "Colombia" },
 "UNSC05": { name: "Nishad Dhatrak", country: "Israel" },
 "UNSC06": { name: "Pranav Kudva Nandavara", country: "France" },
@@ -140,7 +112,7 @@ const delegates = {
 "UNSC08": { name: "Shikhar Joshi", country: "Denmark" },
 "UNSC09": { name: "Samen Aneja", country: "China" },
 "UNSC10": { name: "Ishaan Nesarikar", country: "Yemen" },
-"UNSC11": { name: "Mayan A. Sreedharan", country: "Russian Federation" },
+"UNSC11": { name: "Mayan A. Sreedharan", country: "Russia" },
 "UNSC12": { name: "Aditi Joshi", country: "India" },
 "UNSC13": { name: "Sushant Kumar Sharma", country: "Somalia" },
 "UNSC14": { name: "Affan Nazimuddin Shaikh", country: "African Union" },
@@ -154,38 +126,44 @@ const delegates = {
 "UNSC22": { name: "Suhab Singh", country: "DR Congo" },
 "UNSC23": { name: "Naina Sarawagi", country: "Italy" },
 "UNSC24": { name: "Dhruv Sharma", country: "North Korea" },
-"UNSC25": { name: "Samanvita Nayak", country: "Republic of Korea" },
+"UNSC25": { name: "Samanvita Nayak", country: "South Korea" },
 "UNSC26": { name: "Hussain Dhinojwala", country: "Norway" },
-    
-// EXECUTIVE BOARD
+
 "YASH01": { name: "Yash Borkar", position: "President" },
 "ARJ02": { name: "Arjun Potnis", position: "Vice President" },
 "PRA03": { name: "Pratyush Mahapatra", position: "Rapporteur" }
-
 };
 
-let currentDelegate=null;
-
-// ENTER KEY SUPPORT
 document.getElementById("idInput").addEventListener("keydown",e=>{
  if(e.key==="Enter") verifyID();
 });
 
 function verifyID(){
- const id=document.getElementById("idInput").value.trim().toUpperCase();
+ const raw = document.getElementById("idInput").value;
+ const id = raw.replace(/\s/g,'').toUpperCase(); // FIX
  const error=document.getElementById("error");
 
  if(delegates[id]){
-   currentDelegate=delegates[id];
-
+   const d = delegates[id];
    error.style.display="block";
    error.style.color="#00ff88";
-   error.innerText="Access Granted. Welcome Delegate.";
+   error.innerText="Access Granted";
 
    setTimeout(()=>{
      document.getElementById("idScreen").style.display="none";
-     startUNSC();
-   },1200);
+     document.getElementById("delName").innerText=d.name;
+
+     if(d.position){
+       roleLine.innerHTML='Position: <span class="highlight">'+d.position+'</span>';
+     }else{
+       roleLine.innerHTML='Country: <span class="highlight">'+d.country+'</span>';
+     }
+
+     const card=document.getElementById("card");
+     card.style.display="block";
+     setTimeout(()=>card.style.opacity=1,100);
+
+   },800);
 
  }else{
    error.style.display="block";
@@ -193,46 +171,6 @@ function verifyID(){
    error.innerText="Invalid Delegate ID";
  }
 }
-
-function typeText(el,text,speed){
- el.innerHTML="";
- let i=0;
- function typing(){
-   if(i<text.length){
-     el.innerHTML+=text.charAt(i++);
-     setTimeout(typing,speed);
-   }
- }
- typing();
-}
-
-function startUNSC(){
- typeText(document.getElementById("intro"),
- "WELCOME TO EMACITY MODEL UNITED NATIONS",35);
-
- document.getElementById("gavel").play().catch(()=>{});
-
- setTimeout(()=>{document.getElementById("gavelText").style.opacity=1;},2200);
- setTimeout(()=>{document.getElementById("line").style.width="60%";},2800);
- setTimeout(()=>{document.getElementById("voice").play().catch(()=>{});},3200);
-
- setTimeout(()=>{
-   const card=document.getElementById("card");
-   document.getElementById("delName").innerText=currentDelegate.name;
-
-   const roleLine=document.getElementById("roleLine");
-
-   if(currentDelegate.position){
-     roleLine.innerHTML='Position: <span class="highlight">'+currentDelegate.position+'</span>';
-   }else{
-     roleLine.innerHTML='Country: <span class="highlight">'+currentDelegate.country+'</span>';
-   }
-
-   card.style.display="block";
-   setTimeout(()=>card.style.opacity=1,100);
- },4000);
-}
-
 </script>
 
 </body>
